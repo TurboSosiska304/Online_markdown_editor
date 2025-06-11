@@ -2,12 +2,14 @@ const editor = document.getElementById('editor');
 const preview = document.getElementById('preview-pane');
 const charCount = document.getElementById('charCount');
 const fileSize = document.getElementById('fileSize');
+const body = document.body;
 
-// Стартовое содержимое
 const defaultText = "# https://github.com/TurboSosiska304";
-
 editor.value = localStorage.getItem("markdown") || defaultText;
 update();
+
+// Инициализация темы
+body.setAttribute('data-theme', localStorage.getItem("theme") || "dark");
 
 editor.addEventListener("input", () => {
   localStorage.setItem("markdown", editor.value);
@@ -42,4 +44,37 @@ function exportZip() {
     a.click();
     URL.revokeObjectURL(a.href);
   });
+}
+
+function toggleTheme() {
+  const current = body.getAttribute("data-theme");
+  const next = current === "dark" ? "light" : "dark";
+  body.setAttribute("data-theme", next);
+  localStorage.setItem("theme", next);
+}
+
+// 🖱 Drag’n’drop
+window.addEventListener("dragover", e => e.preventDefault());
+window.addEventListener("drop", e => {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file && file.type === "text/markdown" || file.name.endsWith(".md")) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      editor.value = reader.result;
+      localStorage.setItem("markdown", reader.result);
+      update();
+    };
+    reader.readAsText(file);
+  } else {
+    alert("Пожалуйста, перетащи .md файл.");
+  }
+});
+
+function clearAll() {
+  if (confirm("Are you sure you want to clear everything? This is irreversible!")) {
+    editor.value = "";
+    localStorage.setItem("markdown", "");
+    update();
+  }
 }

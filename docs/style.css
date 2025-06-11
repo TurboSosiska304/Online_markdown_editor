@@ -103,3 +103,92 @@ footer a {
 footer a:hover {
   text-decoration: underline;
 }
+:root {
+  --bg: #1e1e1e;
+  --fg: #ddd;
+  --border: #333;
+  --button-bg: #3a3d41;
+  --button-hover: #444;
+  --preview-bg: #1b1b1b;
+  --link: #4aa3ff;
+}
+
+[data-theme="light"] {
+  --bg: #ffffff;
+  --fg: #222;
+  --border: #ccc;
+  --button-bg: #eee;
+  --button-hover: #ddd;
+  --preview-bg: #f9f9f9;
+  --link: #0066cc;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+header, footer {
+  background: var(--bg);
+  border-color: var(--border);
+}
+
+.buttons button {
+  background: var(--button-bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+}
+
+.buttons button:hover {
+  background: var(--button-hover);
+}
+
+#editor-pane, #preview-pane {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+#preview-pane {
+  background: var(--preview-bg);
+}
+
+footer a {
+  color: var(--link);
+}
+
+.divider {
+  width: 2px;
+  background: var(--border);
+}
+.title-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.subtitle {
+  font-size: 11px;
+  color: var(--link);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.buttons button {
+  margin-left: 8px;
+  padding: 5px 12px;
+  background: var(--button-bg);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.buttons button:hover {
+  background: var(--button-hover);
+}

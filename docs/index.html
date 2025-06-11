@@ -9,13 +9,18 @@
 </head>
 <body>
   <header>
+  <div class="title-section">
     <div class="title">Markdown Editor</div>
-    <div class="buttons">
-      <button onclick="exportFile('md')">.md</button>
-      <button onclick="exportFile('html')">.html</button>
-      <button onclick="exportZip()">.zip</button>
-    </div>
-  </header>
+    <div class="subtitle">Site supports Drag’n’drop</div>
+  </div>
+  <div class="buttons">
+    <button onclick="exportFile('md')">.md</button>
+    <button onclick="exportFile('html')">.html</button>
+    <button onclick="exportZip()">.zip</button>
+    <button onclick="toggleTheme()">🌙 / ☀️</button>
+    <button onclick="clearAll()">Clear output</button>
+  </div>
+</header>
 
   <main>
     <div id="editor-pane">
