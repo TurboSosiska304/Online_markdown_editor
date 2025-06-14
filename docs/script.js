@@ -24,19 +24,58 @@ function update() {
 }
 
 function exportFile(type) {
-  const content = type === "html" ? preview.innerHTML : editor.value;
-  const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+  let content;
+  let mimeType;
+  let filename;
+
+  if (type === "html") {
+    content = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exported Markdown</title>
+</head>
+<body>
+${preview.innerHTML}
+</body>
+</html>`;
+    mimeType = "text/html;charset=utf-8";
+    filename = "document.html";
+  } else {
+    content = editor.value;
+    mimeType = "text/markdown;charset=utf-8";
+    filename = "document.md";
+  }
+
+  const bom = '\uFEFF'; // Byte Order Mark для правильной кодировки
+  const blob = new Blob([bom + content], { type: mimeType });
+
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = type === "html" ? "document.html" : "document.md";
+  a.download = filename;
   a.click();
   URL.revokeObjectURL(a.href);
 }
 
 function exportZip() {
   const zip = new JSZip();
-  zip.file("document.md", editor.value);
-  zip.file("document.html", preview.innerHTML);
+
+  const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exported Markdown</title>
+</head>
+<body>
+${preview.innerHTML}
+</body>
+</html>`;
+
+  zip.file("document.md", '\uFEFF' + editor.value); // с BOM
+  zip.file("document.html", '\uFEFF' + htmlContent); // с BOM
+
   zip.generateAsync({ type: "blob" }).then(content => {
     const a = document.createElement("a");
     a.href = URL.createObjectURL(content);
@@ -58,7 +97,7 @@ window.addEventListener("dragover", e => e.preventDefault());
 window.addEventListener("drop", e => {
   e.preventDefault();
   const file = e.dataTransfer.files[0];
-  if (file && file.type === "text/markdown" || file.name.endsWith(".md")) {
+  if (file && (file.type === "text/markdown" || file.name.endsWith(".md"))) {
     const reader = new FileReader();
     reader.onload = () => {
       editor.value = reader.result;
